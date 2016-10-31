@@ -11,6 +11,11 @@ import java.nio.channels.ReadableByteChannel;
  * Created by ruz76 on 20.10.2016.
  */
 public class Downloader extends Thread {
+    public String filename;
+    public Downloader() {
+        long milis = System.currentTimeMillis();
+        filename = milis + "-malta-latest.osm.pbf";
+    }
     public void run() {
         /* while(true) { */
         //TODO
@@ -23,9 +28,11 @@ public class Downloader extends Thread {
             ReadableByteChannel rbc = null;
             try {
                 rbc = Channels.newChannel(website.openStream());
-                long milis = System.currentTimeMillis();
-                FileOutputStream fos = new FileOutputStream(milis + "-malta-latest.osm.pbf");
+
+                FileOutputStream fos = new FileOutputStream(filename);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                Imposm imposm = new Imposm();
+                imposm.importToDb();
             } catch (IOException e) {
                 e.printStackTrace();
             }
